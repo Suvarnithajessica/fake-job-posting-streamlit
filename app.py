@@ -9,14 +9,22 @@ from scipy.sparse import hstack
 
 @st.cache_data(show_spinner=False)
 def load_models():
-    with gzip.open("tfidf_vectorizer.pkl.gz", "rb") as f:
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+    # Load TFIDF
+    with open(os.path.join(BASE_DIR, "tfidf_vectorizer.pkl"), "rb") as f:
         vectorizer = pickle.load(f)
-    with gzip.open("knn_model.pkl.gz", "rb") as f:
+
+    # Load models
+    with open(os.path.join(BASE_DIR, "knn_model.pkl"), "rb") as f:
         knn_model = pickle.load(f)
-    with gzip.open("naive_bayes_model.pkl.gz", "rb") as f:
+
+    with open(os.path.join(BASE_DIR, "naive_bayes_model.pkl"), "rb") as f:
         nb_model = pickle.load(f)
-    with gzip.open("decision_tree_model.pkl.gz", "rb") as f:
+
+    with open(os.path.join(BASE_DIR, "decision_tree_model.pkl"), "rb") as f:
         dt_model = pickle.load(f)
+
     return vectorizer, knn_model, nb_model, dt_model
 
 vectorizer, knn_model, nb_model, dt_model = load_models()
