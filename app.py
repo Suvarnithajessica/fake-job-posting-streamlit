@@ -2,10 +2,11 @@ import streamlit as st
 import pickle
 import numpy as np
 import re
+import os
 from scipy.sparse import hstack
-import gzip
 
 # ---------- LOAD MODELS ----------
+
 @st.cache_data(show_spinner=False)
 def load_models():
     with gzip.open("tfidf_vectorizer.pkl.gz", "rb") as f:
@@ -19,6 +20,21 @@ def load_models():
     return vectorizer, knn_model, nb_model, dt_model
 
 vectorizer, knn_model, nb_model, dt_model = load_models()
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+with open(os.path.join(BASE_DIR, "tfidf_vectorizer.pkl"), "rb") as f:
+    vectorizer = pickle.load(f)
+
+with open(os.path.join(BASE_DIR, "knn_model.pkl"), "rb") as f:
+    knn_model = pickle.load(f)
+
+with open(os.path.join(BASE_DIR, "naive_bayes_model.pkl"), "rb") as f:
+    nb_model = pickle.load(f)
+
+with open(os.path.join(BASE_DIR, "decision_tree_model.pkl"), "rb") as f:
+    dt_model = pickle.load(f)
+
 
 # ---------- TEXT CLEANING ----------
 def clean_text(text):
@@ -44,6 +60,7 @@ if st.button("Predict"):
         # Clean and vectorize text
         job_text_clean = clean_text(job_text)
         text_vec = vectorizer.transform([job_text_clean])
+
         numeric_features = np.array([[has_logo, has_questions]])
         final_input = hstack([text_vec, numeric_features])
 
@@ -75,3 +92,5 @@ if st.button("Predict"):
                 st.error("FAKE ❌")
             else:
                 st.success("REAL ✅")
+
+

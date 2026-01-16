@@ -1,5 +1,6 @@
-base/
 __pycache__/
-*.pkl
-*.ipynb_checkpoints
+*.pyc
+*.pkl.gz
+*.zip
 .env
+venv/
